@@ -1,0 +1,47 @@
+This document serves as an *extra* guideline for adding the Community solution to a running Pentaho server (pentaho-bi-server on github).
+Here, it is assumed that a folder named /pentaho exists, where the pentaho, tomcat and project will exist. 
+
+** Required tools:
+- same as for pentaho-bi-server
+- access to your local mysql server
+
+1- Place the "community" folder under solution-community/solution in the project-metrics/solution folder of your pentaho server (e.g.: /pentaho/project-metrics/solution/community)
+
+2- edit the "build-properties" file and add the following (change accordingly):
+DB.COMMUNITY.URL = jdbc:mysql://localhost:3306/metrics_community?autoReconnect=true
+DB.COMMUNITY.USER = MYSQL_USER_HERE
+DB.COMMUNITY.PASSWORD = PASSWORD_HERE
+DB.COMMUNITY.DRIVER = com.mysql.jdbc.Driver
+
+(see solution-community/config/build.properties) as an example, do your changes under /pentaho/project-metrics (the original server)
+
+3- Patch the datasources
+Add the following to your /pentaho/project-metrics/patches/project-metrics/solution/system/olap/datasources.xml
+(there's an example on this repository too: solution-community/patches/project....)
+
+<Catalog name="Mercurial">
+  <DataSourceInfo>Provider=mondrian;DataSource=metrics_community</DataSourceInfo>
+  <Definition>solution:community/mercurial.mondrian.xml</Definition>
+</Catalog>
+
+4- Add the data to your mysql server
+4.1 Login on MySQL with the credentials you wrote in #3
+4.2 Create the database metrics_community: CREATE DATABASE metrics_community;
+4.3 Load the data into it (edit according to your needs):
+4.3.1 rsync -av --stats --progress cm-metricsapp01:/var/www/protected/metrics_community.sql.tar.gz ./ 
+4.3.2 tar xvfz metrics_community.sql.tar.gz
+4.3.3 mysql -u MYSQL_USER_HERE -p metrics_community   < metrics_community.sql
+
+
+5- Follow the instructions to compile and run your project (item #5 "Build the project") from the pentaho-bi-server README. This is a quick summary:
+5.1: stop Pentaho and Hypersonic
+5.2:
+cd /pentaho
+ant -Dproject=metrics -Denv=MYNAME  dist-clean all
+cd project-metrics
+./ctools-installer.sh -s /pentaho/project-metrics/solution -w /pentaho/target-dist/server/webapps/pentaho
+cd /pentaho/target-build/bi-platform-sample-data
+sh start_hypersonic.sh
+ant -Dproject=metrics -Denv=MYNAME run 
+
+6- Once you start your Pentaho server (http://127.0.0.1:8080/pentaho/Home (user: joe, password: password)), browse to the "community files" and you'll find the Landing Page + 2 dashboards in there.

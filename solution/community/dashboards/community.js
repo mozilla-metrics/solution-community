@@ -1,7 +1,6 @@
 var community = {};
 
 // Dashboards navigation:
-//var community.dashboards = [ [ 0, "Render?solution=community&path=%2Fdashboards&file=contributorMap.wcdf"], [ 1, "Render?solution=community&path=%2Fdashboards&file=contributionTrends.wcdf"] ];
 community.dashboards = { 
  0: "Render?solution=community&path=%2Fdashboards&file=contributorMap.wcdf", 
  1: "Render?solution=community&path=%2Fdashboards&file=contributionTrends.wcdf" 
@@ -323,7 +322,7 @@ community.drawAutoString = function(maxSize,cssclass){
 
   
     //create elements
-    var a = $('<a class="info" href="mailto:mozilla@webdetails.pt?subject=Community%20Metrics%20Dashboard%20Data%20Correction&body=I%20think%20that%20the%20information%20is%20not%20accurate%20because%20..."></a>');
+    var a = $('<a class="info" href="mailto:blabla@blabla.com?subject=Community%20Metrics%20Dashboard%20Data%20Correction&body=I%20think%20that%20the%20information%20is%20not%20accurate%20because%20..."></a>');
     var user = $("<div id=user class=autoString> </div>");
 
     //build elemets
