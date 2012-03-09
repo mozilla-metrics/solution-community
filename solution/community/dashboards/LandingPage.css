@@ -1,0 +1,411 @@
+body {
+    background: #fff url('images/Background_LP.png') repeat-x;
+	background-color: #fff;
+    font-family: Arial, sans-serif;
+    
+}
+
+.blockUI.blockMsg.blockPage.ui-draggable{
+    border: 0px !important;
+    border-radius: 20px 20px 20px 20px;
+    -moz-border-radius: 20px 20px 20px 20px;
+    -webkit-border-radius: 20px 20px 20px 20px;
+    background: #000 !important;
+    height: 100px;
+    width: 0px !important;
+}
+
+#header {
+	height: 20px;
+	margin-bottom: 10px;
+}
+
+
+#visitMozillaLink{
+    width: 150px;
+    height: 51px;
+	background: url('../../common/images/header/tab/mozillaTab.png') no-repeat 100% top;
+    
+}
+
+#visitMozillaLink a span{
+    display: block;
+    float: right;
+    height: 49px;
+    overflow: hidden;
+    position: relative;
+    width: 118px;
+}
+
+.title{
+	font-family: MetaBlack;
+	font-weight: bold;
+	font-size: 40px;
+	text-align: center;
+	color: #242a2c;
+	margin-top: 50px;
+}
+
+#images{
+	margin-top: 100px;
+}
+
+#selectors{
+	height: 230px;
+}
+
+.lpButton{
+	background-color: #4D4D4D;
+	height: 150px;
+	margin-bottom: 10px;
+	margin-top: 20px;
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	-webkit-transition: background 300ms ease-in;
+	-moz-transition: background 300ms ease-in;
+	-o-transition: background 300ms ease-in;
+	transition: background 300ms ease-in;
+}
+
+.lpButton:hover{
+	background-color: #0084d7;
+}
+
+.lpButton:active{
+	background-color: black;
+}
+
+.lpButton a{
+	text-decoration: none;
+}
+
+.contributorImg{
+	background: transparent url('images/Contributor.png') center top no-repeat;
+	height: 33px;
+}
+
+.armyImg{
+	background: transparent url('images/Army.png') center top no-repeat;
+	padding-right: 20px;
+	height: 33px;
+}
+
+.aboutFeedback{
+    text-align: center;
+	font-family: 'Trebuchet MS',Arial,Sans;
+	font-size: 24px;
+	color: #006cb8;
+}
+
+.aboutFeedback:hover{
+	cursor: pointer;
+	text-decoration: underline;
+}
+
+
+div#popupContainer{
+	background: url("images/popupBg.png") repeat-x scroll 0 bottom transparent;
+}
+
+.popupComponent{
+    border: 2px solid #006cb8;
+    border-radius: 5px 5px 5px 5px;
+    -moz-border-radius: 5px 5px 5px 5px;
+    -webkit-border-radius: 5px 5px 5px 5px;
+    -moz-box-shadow: 5px 5px 5px #ccc;
+    -webkit-box-shadow: 5px 5px 5px #ccc;
+    box-shadow: 5px 5px 5px #ccc;
+}
+
+.popupComponent a.close {
+    background: url("images/popupX.png") no-repeat scroll 0 5px transparent;
+    height: 30px;
+    width: 20px;
+}
+
+.popupTab{
+	background: url("images/popupTab.png") no-repeat scroll center 10px transparent;
+	height: 70px;
+}
+
+.popupAbout{
+    text-align: center;
+	font-family: Georgia;
+	font-size: 24px;
+	font-style: italic;
+	color: #006cb8;
+	margin-top: 15px;
+}
+
+.popupTitle{
+    text-align: left;
+	font-family: MetaBold;
+	font-size: 20px;
+	font-weight: bold;
+	color: #242a2c;
+	margin-top: 20px;
+}
+
+.popupTitle:hover{
+	color: #242a2c;
+}
+
+.popupSpacer{
+	background: url("images/popupSpacer.png") no-repeat scroll bottom center transparent;
+	height: 26px;
+	margin-bottom: 30px;
+}
+
+.popupText{
+    text-align: justify;
+	font-family: 'Trebuchet MS',Arial,Sans;
+	font-size: 11px;
+	font-weight: normal;
+	color: #242a2c;
+	width: 300px;
+}
+
+.popupText1{
+    text-align: justify;
+	font-family: 'Trebuchet MS',Arial,Sans;
+	font-size: 11px;
+	font-weight: bold;
+	color: #242a2c;
+	width: 290px;
+	margin-left: 10px;
+	margin-right: 20px;
+}
+
+.popupText2{
+    text-align: justify;
+	font-family: 'Trebuchet MS',Arial,Sans;
+	font-size: 11px;
+	font-weight: normal;
+	color: #242a2c;
+	width: 290px;
+	margin-left: 10px;
+	margin-right: 20px;
+}
+
+.popupText3{
+    text-align: justify;
+	font-family: 'Trebuchet MS',Arial,Sans;
+	font-size: 11px;
+	font-weight: normal;
+	color: #242a2c;
+	width: 300px;
+}
+
+.popupText4{
+    text-align: justify;
+	font-family: 'Trebuchet MS',Arial,Sans;
+	font-size: 11px;
+	font-weight: normal;
+	color: #242a2c;
+	width: 300px;
+}
+
+.popupText5{
+    text-align: justify;
+	font-family: 'Trebuchet MS',Arial,Sans;
+	font-size: 11px;
+	font-weight: bold;
+	color: #242a2c;
+	width: 300px;
+	margin-right: 10px;
+}
+
+.popupText6{
+    text-align: justify;
+	font-family: 'Trebuchet MS',Arial,Sans;
+	font-size: 11px;
+	font-weight: normal;
+	color: #242a2c;
+	width: 300px;
+	margin-right: 10px;
+}
+
+.popupTextLink{
+	margin-top: 46px;
+}
+
+.popupLink{
+	text-align: justify;
+	font-family: 'Trebuchet MS',Arial,Sans;
+	font-size: 11px;
+	font-weight: normal;
+	margin-bottom: 100px;
+}
+
+#popupContainer a,
+#popupContainer a:active,
+#popupContainer a:visited{
+	color: #006cb8;
+	margin-bottom: 20px;
+	text-decoration: none;
+}
+
+#popupContainer a:hover{
+	text-decoration: underline;
+}
+
+.popupComponent.north .arrow {
+    background-image: url("images/vertex_d.png");
+    bottom: -18px;
+    height: 18px;
+    width: 45px;
+}
+
+.buttonText{
+    padding-top: 4px;
+    text-align: center;
+	font-family: 'Trebuchet MS',Arial,Sans;
+	font-size: 30px;
+	color: #fff;
+}
+
+.joinText{
+	background: transparent url('images/helpus_testit.png') scroll 117px -2px no-repeat;
+    text-align: left;
+	text-indent: 75px;
+	font-size: 14px;
+	color: #fff;
+	width: 195px;
+	margin-bottom: 5px;
+	text-decoration: none;
+	padding-top: 41px;
+	padding-bottom: 20px;
+}
+
+.button{
+	padding-right: 10px;
+}
+
+.text1{
+	font-family: Georgia;
+	font-size: 16px;
+	font-style: italic;
+	text-align: center;
+	color: #0084d7;
+}
+
+.text2{
+	font-family: MetaBlack;
+	font-weight: bold;
+	font-size: 12px;
+	text-align: center;
+	color: #4D4D4D;
+	margin-bottom: 10px;
+}
+
+.text3{
+	font-family: Georgia;
+	font-size: 16px;
+	font-style: italic;
+	text-align: center;
+	color: #0084d7;
+	margin-bottom: 50px;
+}
+
+.iButton {
+    background: url('../../common/images/itemsTablesCharts/userInfo.png') no-repeat scroll -17px 50%;
+    display: inline-block;
+    height: 19px;
+    width: 19px;
+    vertical-align: top;
+}
+
+.border{
+	background: transparent url('images/border.png') center top no-repeat;
+	border-right: none!important;
+	height: 20px;
+}
+
+/* FOOTER */
+
+#footer{
+	padding: 10px;
+	font-size: 14px;
+	color: #0084d7;
+}
+
+#footer a,
+#footer a:active,
+#footer a:visited{
+	text-decoration: none;
+	color: #006cb8;
+}
+
+#footer a:hover{
+	text-decoration: underline;
+	color: #0084d7;
+}
+
+.footerLink{
+	margin-top: 8px;
+}
+
+.metricsLogo{
+    background: transparent url('images/mozilla_metrics_logo.png') no-repeat;
+    height: 30px;
+	padding-right: 10px;
+}
+
+.footerShare{
+	color: #4D4D4D;
+	font-family: Georgia;
+	font-size: 14px;
+	font-style: italic;
+	text-align: right;
+	margin-right: 10px;
+}
+
+.mediaButton{
+	-webkit-transition: background 300ms ease-in;
+	-moz-transition: background 300ms ease-in;
+	-o-transition: background 300ms ease-in;
+	transition: background 300ms ease-in;
+}
+
+.mediaButton a span {
+	display: inline-block;
+	width: 23px;
+	height: 23px;
+}
+
+#footerShare{
+	display: inline-block;
+	vertical-align: top;
+	line-height: 30px;
+}
+
+#facebookButton {
+	background: transparent url('../../common/images/footer/facebook_button.png') right top no-repeat;
+	margin-top: 4px;
+	display: inline-block;
+}
+
+div#facebookButton a span:hover {
+	background: transparent url('../../common/images/footer/facebook_button_act.png') right top no-repeat;
+}
+
+#twitterButton {
+	background: transparent url('../../common/images/footer/twitter_button.png') right top no-repeat;
+	margin-top: 4px;
+	display: inline-block;
+}
+
+div#twitterButton a span:hover {
+	background: transparent url('../../common/images/footer/twitter_button_act.png') right top no-repeat;
+}
+
+#bloggerButton {
+	background: transparent url('../../common/images/footer/blogger_button.png') right top no-repeat;
+	margin-top: 4px;
+	display: inline-block;
+}
+
+div#bloggerButton a span:hover {
+	background: transparent url('../../common/images/footer/blogger_button_act.png') right top no-repeat;
+}

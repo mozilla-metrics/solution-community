@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CDADescriptor>
+   <DataSources>
+      <Connection id="patches_by_user_flagemployee" type="mondrian.jndi">
+         <Catalog>community/mercurial.mondrian.xml</Catalog>
+         <Jndi>metrics_community</Jndi>
+      </Connection>
+      <Connection id="patches_by_date_typeQuery" type="mondrian.jndi">
+         <Catalog>community/mercurial.mondrian.xml</Catalog>
+         <Jndi>metrics_community</Jndi>
+      </Connection>
+      <Connection id="patches_by_date_moduleQuery" type="mondrian.jndi">
+         <Catalog>community/mercurial.mondrian.xml</Catalog>
+         <Jndi>metrics_community</Jndi>
+      </Connection>
+      <Connection id="patches_by_date_repositoryQuery" type="mondrian.jndi">
+         <Catalog>community/mercurial.mondrian.xml</Catalog>
+         <Jndi>metrics_community</Jndi>
+      </Connection>
+      <Connection id="patches_by_typeQuery" type="mondrian.jndi">
+         <Catalog>community/mercurial.mondrian.xml</Catalog>
+         <Jndi>metrics_community</Jndi>
+      </Connection>
+      <Connection id="patches_by_module_submoduleQuery" type="mondrian.jndi">
+         <Catalog>/community/mercurial.mondrian.xml</Catalog>
+         <Jndi>metrics_community</Jndi>
+      </Connection>
+      <Connection id="modulesQuery" type="mondrian.jndi">
+         <Catalog>community/mercurial.mondrian.xml</Catalog>
+         <Jndi>metrics_community</Jndi>
+      </Connection>
+   </DataSources>
+   <DataAccess access="public" cache="true" cacheDuration="3600"
+               connection="patches_by_user_flagemployee"
+               id="patches_by_user_flagemployee"
+               type="mdx">
+      <BandedMode>compact</BandedMode>
+      <Columns/>
+      <Parameters>
+         <Parameter default="2011-01-25" name="referenceDateParameter" type="String"/>
+         <Parameter default="12" name="dateRangeParameter" type="String"/>
+         <Parameter default="30" name="top" type="String"/>
+         <Parameter default="All" name="repositoryParameter" type="String"/>
+         <Parameter default="All" name="employeeParameter" type="String"/>
+         <Parameter default="[Modules].[All]" name="moduleParameter" type="String"/>
+      </Parameters>
+      <Query>WITH 
+  member [Dates].[Date Range] as 
+    Aggregate(LastPeriods(${dateRangeParameter}, Ancestor([Dates].[Date].[${referenceDateParameter}], 2)))
+  member [Measures].[flag_emp] as [Users].CurrentMember.Properties("Mozilla employee")
+  member [Measures].[last_contrib_date] as [Users].CurrentMember.Properties("Last contribution date")
+  member [Measures].[NotNull Patches] as IIF( [Measures].[patches] &lt;&gt; 0, [Measures].[patches], 0)
+
+  member [Modules].[Selected Modules] as Aggregate( { ${moduleParameter} } )
+
+select 
+  NON EMPTY {[Measures].[NotNull Patches]} ON COLUMNS,
+  UNION ([Users].[All],TopCount( Order( [Users].Children, [Measures].[patches], DESC ), ${top})) ON ROWS 
+
+from [Mercurial Patches]
+where ([Dates].[Date Range], 
+[Repositories].[${repositoryParameter}], 
+[Modules].[Selected Modules],
+[Is_Employee].[${employeeParameter}])</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600"
+               connection="patches_by_date_typeQuery"
+               id="patches_by_date_typeQuery"
+               type="mdx">
+      <BandedMode>compact</BandedMode>
+      <Columns/>
+      <Parameters>
+         <Parameter default="2011-01-26" name="referenceDateParameter" type="String"/>
+         <Parameter default="12" name="dateRangeParameter" type="String"/>
+         <Parameter default="All" name="repositoryParameter" type="String"/>
+         <Parameter default="All" name="employeeParameter" type="String"/>
+         <Parameter default="[Patch types].[patch]" name="contributionParameter" type="String"/>
+         <Parameter default="All" name="userParameter" type="String"/>
+      </Parameters>
+      <Query>with 
+  set DateRange as 
+
+    LastPeriods( ${dateRangeParameter}, Ancestor([Dates].[Date].[${referenceDateParameter}], 2) )
+
+  member [Measures].[Not Null Patches] as IIf([Measures].[patches] &lt;&gt; 0, [Measures].[patches], 0)
+  
+  set PatchSelected as { ${contributionParameter} }
+
+select NON EMPTY [PatchSelected] ON COLUMNS,
+  NON EMPTY [DateRange] ON ROWS
+from [Mercurial Patches]
+
+where
+  ([Measures].[Not Null Patches], 
+--[Repositories].[${repositoryParameter}], 
+[Is_Employee].[${employeeParameter}], 
+[Users].[${userParameter}])</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600"
+               connection="patches_by_date_moduleQuery"
+               id="patches_by_date_moduleQuery"
+               type="mdx">
+      <BandedMode>compact</BandedMode>
+      <Columns/>
+      <Parameters>
+         <Parameter default="2010-01-26" name="referenceDateParameter" type="String"/>
+         <Parameter default="364" name="dateRangeParameter" type="String"/>
+         <Parameter default="All" name="userParameter" type="String"/>
+         <Parameter default="All" name="repositoryParameter" type="String"/>
+         <Parameter default="All" name="employeeParameter" type="String"/>
+         <Parameter default="[Modules].[All]" name="moduleParameter" type="String"/>
+         <Parameter default="[Patch types].[patch]" name="contributionParameter" type="String"/>
+      </Parameters>
+      <Query>with 
+  SET DateRange as 
+    
+    LastPeriods( ${dateRangeParameter}, Ancestor([Dates].[Date].[${referenceDateParameter}], 2) )
+
+  member [Measures].[NotNull Patches] as IIF( [Measures].[patches] &lt;&gt; 0, [Measures].[patches], 0)
+
+  SET MODULES as {${moduleParameter}}
+
+select 
+  NON EMPTY MODULES ON COLUMNS,
+  NON EMPTY DateRange ON ROWS
+from [Mercurial Patches] 
+
+where (
+  ${contributionParameter},
+  [Measures].[NotNull Patches], 
+--[Repositories].[${repositoryParameter}], 
+  [Users].[${userParameter}],
+  [Is_Employee].[${employeeParameter}])</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600"
+               connection="patches_by_date_repositoryQuery"
+               id="patches_by_date_repositoryQuery"
+               type="mdx">
+      <BandedMode>compact</BandedMode>
+      <Columns/>
+      <Parameters>
+         <Parameter default="2010-01-26" name="referenceDateParameter" type="String"/>
+         <Parameter default="364" name="dateRangeParameter" type="String"/>
+         <Parameter default="[Repositories].[All]" name="repositoryParameter" type="String"/>
+         <Parameter default="All" name="employeeParameter" type="String"/>
+      </Parameters>
+      <Query>with 
+  SET DateRange as 
+ 
+  LastPeriods( ${dateRangeParameter}, Ancestor([Dates].[Date].[${referenceDateParameter}], 2) )
+
+  member [Measures].[NotNull Patches] as IIF( [Measures].[patches] &lt;&gt; 0, [Measures].[patches], 0)
+--  member [Users].[Selected Users] as Aggregate( { ${multiUserMember} } )
+
+  SET REPOSITORIES as {${repositoryParameter}}
+
+select 
+  NON EMPTY REPOSITORIES ON COLUMNS,
+  NON EMPTY DateRange ON ROWS
+from [Mercurial Patches] 
+
+where (
+  [Measures].[NotNull Patches], 
+--  [Users].[Selected Users],
+  [Is_Employee].[${employeeParameter}])</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600"
+               connection="patches_by_typeQuery"
+               id="patches_by_typeQuery"
+               type="mdx">
+      <BandedMode>compact</BandedMode>
+      <Columns/>
+      <Parameters>
+         <Parameter default="2011-02-16" name="referenceDateParameter" type="String"/>
+         <Parameter default="[Repositories].[All]" name="repositoryParameter" type="String"/>
+         <Parameter default="364" name="dateRangeParameter" type="String"/>
+      </Parameters>
+      <Query>with 
+  member [Dates].[Date Range] as 
+    Aggregate(LastPeriods( ${dateRangeParameter}, Ancestor([Dates].[Date].[${referenceDateParameter}], 2) ))
+
+  member [Measures].[NotNull Patches] as 'IIf(([Measures].[patches] &lt;&gt; 0.0), [Measures].[patches], 0.0)'
+  member [Measures].[Period] as '([Measures].[NotNull Patches], [Dates].[Date Range])'
+  member [Measures].[Overall] as '([Measures].[NotNull Patches], [Dates].[All])'
+  member [Measures].[Ratio] as '(([Measures].[Period] / [Measures].[Overall]) * 100.0)'
+  member [Measures].[Staff] as '([Measures].[NotNull Patches], [Dates].[Date Range], [Is_Employee].[Staff])'
+  member [Measures].[Volunteer] as '([Measures].[NotNull Patches], [Dates].[Date Range], [Is_Employee].[Volunteer])'
+  set REPOSITORIES as '{${repositoryParameter}}'
+select 
+  NON EMPTY {
+    [Measures].[Period], 
+    [Measures].[Ratio], 
+    [Measures].[Staff], 
+    [Measures].[Volunteer]
+    } ON COLUMNS,
+  REPOSITORIES ON ROWS
+from [Mercurial Patches]</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600"
+               connection="patches_by_module_submoduleQuery"
+               id="patches_by_module_submoduleQuery"
+               type="mdx">
+      <BandedMode>compact</BandedMode>
+      <Columns/>
+      <Output indexes="0" mode="exclude"/>
+      <Parameters>
+         <Parameter default="mozilla-central" name="repository" type="String"/>
+         <Parameter default="20" name="top" type="String"/>
+         <Parameter default="All" name="employeeParameter" type="String"/>
+         <Parameter default="2011-02-21" name="referenceDateParameter" type="String"/>
+         <Parameter default="12" name="dateRangeParameter" type="String"/>
+      </Parameters>
+      <Query>WITH
+  member [Dates].[Date Range] as 
+    Aggregate(LastPeriods( ${dateRangeParameter}, Ancestor([Dates].[Date].[${referenceDateParameter}], 2) ))
+
+  member [Measures].[Display Name] as [Modules].Parent.Name 
+  member [Measures].[Project Area] as [Modules].CurrentMember.Name
+  member [Measures].[NotNull Patches] as IIF( [Measures].[patches] &lt;&gt; 0, [Measures].[patches], 0)
+ 
+SELECT
+  NON EMPTY {[Measures].[Display Name],[Measures].[Project Area], [Measures].[NotNull Patches]} ON COLUMNS,
+
+  Filter(
+    TopCount(
+      Order( Descendants( [Modules], [Modules].[submodule], SELF ), [Measures].[patches], BDESC
+      ), ${top}),
+    [Measures].[patches] &gt; 0
+  ) ON ROWS
+
+FROM [Mercurial Patches]
+WHERE ( [Dates].[Date Range], [Repositories].[${repository}], [Is_Employee].[${employeeParameter}] )</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600" connection="modulesQuery"
+               id="modulesQuery"
+               type="mdx">
+      <BandedMode>compact</BandedMode>
+      <Columns/>
+      <Output indexes="1,0" mode="include"/>
+      <Parameters>
+         <Parameter default="All" name="repositoryParameter" type="String"/>
+      </Parameters>
+      <Query>with Member [Measures].[Name] as [Modules].CurrentMember.UniqueName
+select 
+  { [Measures].[Name] } ON COLUMNS,
+Filter( [Modules].Children, [Measures].[Patches] &gt;0) ON ROWS
+from [Mercurial Patches]
+where [Repositories].[${repositoryParameter}]</Query>
+   </DataAccess>
+</CDADescriptor>

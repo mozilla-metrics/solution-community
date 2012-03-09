@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<Schema name="Mercurial Data">
+	<Dimension type="TimeDimension" highCardinality="false" name="Dates">
+		<Hierarchy hasAll="true" allMemberName="All" primaryKey="date_id">
+			<Table name="dates">
+			</Table>
+			<Level name="Year" column="year" type="Numeric" uniqueMembers="true" levelType="TimeYears" hideMemberIf="Never">
+			</Level>
+			<Level name="Month" column="month" type="Numeric" uniqueMembers="false" levelType="TimeMonths" hideMemberIf="Never">
+			</Level>
+			<Level name="Day" column="day_of_month" type="Numeric" uniqueMembers="false" levelType="TimeDays" hideMemberIf="Never">
+			</Level>
+			<Level name="Date" column="date" type="String" uniqueMembers="true" levelType="TimeDays" hideMemberIf="Never">
+			</Level>
+		</Hierarchy>
+		<Hierarchy name="Weeks" hasAll="true" allMemberName="All" primaryKey="date_id">
+			<Table name="dates">
+			</Table>
+			<Level name="Year" column="year" type="Numeric" uniqueMembers="false" levelType="TimeYears" hideMemberIf="Never">
+			</Level>
+			<Level name="Week" column="week_of_year" type="Numeric" uniqueMembers="false" levelType="TimeWeeks" hideMemberIf="Never">
+			</Level>
+			<Level name="Day" column="day_of_month" type="Numeric" uniqueMembers="false" levelType="TimeDays" hideMemberIf="Never">
+			</Level>
+			<Level name="Date" column="date" type="String" uniqueMembers="false" levelType="TimeDays" hideMemberIf="Never">
+			</Level>
+		</Hierarchy>
+	</Dimension>
+
+	<Dimension type="StandardDimension" highCardinality="false" name="Repositories">
+		<Hierarchy hasAll="true" allMemberName="All" primaryKey="id_repo">
+			<Table name="d_mercurial_repository"/>
+			<Level name="Repository" column="name_repo" type="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never"/>
+		</Hierarchy>
+	</Dimension>
+
+	<Dimension type="StandardDimension" highCardinality="false" name="Modules">
+		<Hierarchy hasAll="true" allMemberName="All" primaryKey="id_module">
+			<Table name="d_mercurial_modules">
+			</Table>
+			<Level name="Module" column="module" type="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never"/>
+			<Level name="Submodule" column="submodule" type="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never"/>
+		</Hierarchy>
+	</Dimension>
+	
+	<Dimension type="StandardDimension" highCardinality="false" name="Patch types">
+		<Hierarchy hasAll="true" allMemberName="All" primaryKey="id_type">
+			<Table name="d_mercurial_patch_type"/>
+			<Level name="Patch type" column="type_description" type="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never"/>
+		</Hierarchy>
+	</Dimension>
+
+	<Dimension type="StandardDimension" highCardinality="false" name="Domains">
+		<Hierarchy hasAll="true" allMemberName="All" primaryKey="id_domain">
+			<Table name="d_mercurial_domain"/>
+			<Level name="Domain" column="domain" type="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never"/>
+		</Hierarchy>
+	</Dimension>
+
+	<Dimension type="StandardDimension" highCardinality="false" name="Users">
+		<Hierarchy hasAll="true" allMemberName="All" primaryKey="id_user">			
+      <View alias="d_mercurial_user">
+        <SQL>
+        select id_user, user_name, first_contribution_date,
+        last_contribution_date,
+        (case is_employee when'Y' then 'Staff' else 'Volunteer' end) is_employee
+        from d_mercurial_user
+        </SQL>
+      </View>
+			<Level name="User" column="user_name" type="String" ordinalColumn="user_name" uniqueMembers="true" levelType="Regular" hideMemberIf="Never">
+				<Property name="Username" column="user_name"/>
+				<Property name="Mozilla employee" column="is_employee"/>
+				<Property name="First contribution date" column="first_contribution_date"/>
+				<Property name="Last contribution date" column="last_contribution_date"/>
+			</Level>
+		</Hierarchy>
+	</Dimension>
+
+	<Dimension type="StandardDimension" highCardinality="false" name="Is_Employee">
+		<Hierarchy hasAll="true" allMemberName="All" primaryKey="id_user">
+      <View alias="d_mercurial_user">
+        <SQL>
+        select id_user, user_name, first_contribution_date,
+        last_contribution_date,
+        (case is_employee when'Y' then 'Staff' else 'Volunteer' end) is_employee
+        from d_mercurial_user
+        </SQL>
+      </View>
+			<Level name="User" column="is_employee" type="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never"/>
+		</Hierarchy>
+	</Dimension>
+
+	<Cube name="Mercurial Patches" cache="true" enabled="true">
+		<Table name="f_mercurial_patches"/>
+		<DimensionUsage source="Dates" name="Dates" foreignKey="id_date" highCardinality="false"/>
+		<DimensionUsage source="Users" name="Users" foreignKey="id_user" highCardinality="false"/>
+		<DimensionUsage source="Is_Employee" name="Is_Employee" foreignKey="id_user" highCardinality="false"/>
+		<DimensionUsage source="Domains" name="Domains" foreignKey="id_domain" highCardinality="false"/>
+		<DimensionUsage source="Repositories" name="Repositories" foreignKey="id_repo" highCardinality="false"/>
+		<DimensionUsage source="Modules" name="Modules" foreignKey="id_module" highCardinality="false"/>
+		<DimensionUsage source="Patch types" name="Patch types" foreignKey="id_type" highCardinality="false"/>
+		<Measure name="patches" column="qty_patches" formatString="Standard" aggregator="sum">
+		</Measure>
+	</Cube>
+</Schema>
+
